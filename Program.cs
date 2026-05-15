@@ -135,14 +135,12 @@ namespace Classes_1
             Console.WriteLine("введите первый угол в формате: (знак)(градусы)o(минуты)` ");
             angleString = GetStringAngleFromCMD();
             Angle a = GetAngleFromString(angleString);
-
             Console.WriteLine("введите второй угол в формате: (знак)(градусы)o(минуты)` ");
             angleString = GetStringAngleFromCMD();
             Angle b = GetAngleFromString(angleString);
-
             while (true)
             {
-                Console.WriteLine("Что необходимо сделать: \n " +
+                Console.WriteLine("Что необходимо сделать: \n" +
                     "1.  привести к 0-360 1 угл \n" +
                     "2.  привести к 0-360 2 угл \n" +
                     "3.  перевести в радианы 1 угл \n" +
@@ -311,8 +309,7 @@ namespace Classes_1
             uint degrees = ((splited[0][0] == '-') || (splited[0][0] == '+'))
             ? Convert.ToUInt32(splited[0][1..])
             : Convert.ToUInt32(splited[0]);
-            ushort minutes = Convert.ToUInt16(splited[1][..1]);
-
+            ushort minutes = Convert.ToUInt16(splited[1][..^1]);
             return new Angle(isPos, degrees, minutes);
         }
     }
