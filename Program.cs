@@ -131,13 +131,10 @@ namespace Classes_1
         {
             Console.WriteLine("========== Программа работы с 2 углами ===============");
 
-            string? angleString;
             Console.WriteLine("введите первый угол в формате: (знак)(градусы)o(минуты)` ");
-            angleString = GetStringAngleFromCMD();
-            Angle a = GetAngleFromString(angleString);
+            Angle a = GetAngleFromCMD();
             Console.WriteLine("введите второй угол в формате: (знак)(градусы)o(минуты)` ");
-            angleString = GetStringAngleFromCMD();
-            Angle b = GetAngleFromString(angleString);
+            Angle b = GetAngleFromCMD();
             while (true)
             {
                 Console.WriteLine("Что необходимо сделать: \n" +
@@ -270,47 +267,44 @@ namespace Classes_1
                         b.AddDegrees(degrees);
                         break;
                     case "22":
-                        string? angleAddString = string.Empty;
                         Console.WriteLine("введите угол в формате: (знак)(градусы)o(минуты)` ");
-                        angleAddString = GetStringAngleFromCMD();
-                        Angle add = GetAngleFromString(angleAddString);
+                        Angle add = GetAngleFromCMD();
                         a += add;
                         break;
                     case "23":
-                        angleAddString = string.Empty;
                         Console.WriteLine("введите угол в формате: (знак)(градусы)o(минуты)` ");
-                        angleAddString = GetStringAngleFromCMD();
-                        add = GetAngleFromString(angleAddString);
+                        add = GetAngleFromCMD();
                         a += add;
                         break;
                 }
             }
         }
 
-        private static string GetStringAngleFromCMD()
+        private static Angle GetAngleFromCMD()
         {
-            string? first = Console.ReadLine();
-            Regex angle = new("^[+-]?\\d{1,3}o\\d{1,2}`$");
-            while (!angle.IsMatch(first))
+            var pattern = @"^([+-]?)(\d{1,3})o(\d{1,2})`$";
+
+            bool isNegative = false;
+            uint deg = 0;
+            ushort min = 0;
+
+            while (true)
             {
-                Console.WriteLine("Ошибка ввода, введите пожалуйста угол в формате: (знак)(градусы)o(минуты)`");
-                first = Console.ReadLine();
+                var match = Regex.Match(Console.ReadLine(), pattern);
+                if (match.Success 
+                    && uint.TryParse(match.Groups[2].Value, out deg) 
+                    && ushort.TryParse(match.Groups[3].Value, out min) 
+                    && deg <= 360 && min <= 59)
+                {
+                    isNegative = (match.Groups[1].Value == "-");
+                    if (deg == 0)
+                        isNegative = false;
+                    break;
+                }
+                else 
+                    Console.WriteLine("Ошибка ввода, введите пожалуйста угол в формате: (знак)(градусы)o(минуты)`");
             }
-            return first;
-        }
-
-        private static Angle GetAngleFromString(string angle)
-        {
-            string[] splited = angle.Split("o");
-            bool isPos = true;
-            if (angle[0] == '-')
-                isPos = false;
-
-            uint degrees = ((splited[0][0] == '-') || (splited[0][0] == '+'))
-            ? Convert.ToUInt32(splited[0][1..])
-            : Convert.ToUInt32(splited[0]);
-            ushort minutes = Convert.ToUInt16(splited[1][..^1]);
-            return new Angle(isPos, degrees, minutes);
+            return new Angle(!isNegative, deg, min);
         }
     }
 }
