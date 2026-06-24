@@ -274,7 +274,7 @@ namespace Classes_1
                     case "23":
                         Console.WriteLine("введите угол в формате: (знак)(градусы)o(минуты)` ");
                         add = GetAngleFromCMD();
-                        a += add;
+                        b += add;
                         break;
                 }
             }
